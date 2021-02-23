@@ -4,7 +4,7 @@ import {configs} from './config'
 export default {
   input: configs.entry,
   output: {
-    name: 'dataTools',
+    name: configs.name,
     file: configs.out + '.js',
     format: 'umd',
     banner: configs.banner

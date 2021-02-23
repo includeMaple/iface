@@ -4,9 +4,9 @@
  * Released under the MIT License.
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('core-js/modules/es.array.concat.js'), require('core-js/modules/es.array.index-of.js'), require('core-js/modules/es.function.name.js'), require('core-js/modules/es.regexp.exec.js'), require('core-js/modules/es.string.split.js'), require('core-js/modules/es.array.slice.js'), require('core-js/modules/es.object.assign.js'), require('core-js/modules/es.array.is-array.js'), require('core-js/modules/es.date.to-string.js'), require('core-js/modules/es.object.to-string.js'), require('core-js/modules/es.regexp.to-string.js')) :
-  typeof define === 'function' && define.amd ? define(['core-js/modules/es.array.concat.js', 'core-js/modules/es.array.index-of.js', 'core-js/modules/es.function.name.js', 'core-js/modules/es.regexp.exec.js', 'core-js/modules/es.string.split.js', 'core-js/modules/es.array.slice.js', 'core-js/modules/es.object.assign.js', 'core-js/modules/es.array.is-array.js', 'core-js/modules/es.date.to-string.js', 'core-js/modules/es.object.to-string.js', 'core-js/modules/es.regexp.to-string.js'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.dataTools = factory());
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define(factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Iface = factory());
 }(this, (function () { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
@@ -258,12 +258,8 @@
 
   var getType = function getType(val) {
     var firstUpper = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var str = Object.prototype.toString.apply(val).slice(8, -1).toLowerCase();
-
-    if (firstUpper) {
-      str = str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
+    var str = Object.prototype.toString.apply(val).slice(8, -1);
+    if (!firstUpper) str = str.toLowerCase();
     return str;
   };
 
@@ -444,6 +440,8 @@
     return true;
   };
 
+  debugger;
+  console.log('---');
   var index = {
     Iface: Iface
   };

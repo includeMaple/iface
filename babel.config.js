@@ -1,29 +1,26 @@
-module.exports = {
-  presets: [
-    [
-      '@babel/preset-env', 
-      {
-        "modules": false,
-        "useBuiltIns": "usage",
-        "corejs": "3"
-      }
-    ]
-  ],
-};
-
-// module.exports = api => {
-//   const isTest = api.env('test');
-//   // 你可以使用 isTest 来决定需要使用到的预设和插件。
-//   return {
-//     presets: [
-//       [
-//         '@babel/preset-env', 
-//         {
-//           "modules": false,
-//           "useBuiltIns": "usage",
-//           "corejs": "3"
-//         }
-//       ]
-//     ],
-//   };
+// module.exports = {
+//   presets: [
+//       '@babel/preset-env', 
+//       {
+//         "modules": false,
+//         "useBuiltIns": "usage",
+//         "corejs": "3"
+//       }
+//   ],
+//   "env": {
+//     "debug": {
+//       "sourceMaps": "inline",
+//       "retainLines": true
+//     }
+//   }
 // };
+
+module.exports = {
+  "presets": ["@babel/preset-env"],
+  "env": {
+    "debug": {
+      "sourceMaps": "inline",
+      "retainLines": true
+    }
+  }
+}

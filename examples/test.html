@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script src='../dist/iface.js'></script>
+
+<script>
+// let iface = Iface({
+//   methods: ['class extends', 'class ensure'],
+//   props: ['class all'],
+//   name: 'iface'
+// })
+Iface = Iface.Iface
+class TTT{
+  constructor () {
+    this.con = 'ss'
+  }
+  static ss() {
+  }
+}
+TTT.ff = 'dljkj'
+let t = new TTT()
+let testface = Iface({
+  methods: ['ss', 'static ss', 'class ff'],
+  props: ['ss'],
+  name: 'sss'
+})
+console.log(Iface.ensure(testface, t))
+
+
+</script>
+
+</body>
+</html>

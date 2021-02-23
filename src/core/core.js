@@ -22,7 +22,7 @@ function forInterface(opt) {
 }
 /**
  * Interface
- * @param {*} opt 
+ * @param {*} opt methods props name
  */
 function Iface (opt) {
   if (this instanceof Iface) {

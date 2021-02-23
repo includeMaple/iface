@@ -99,9 +99,7 @@ export const isIface = function (val) {
  * @return {string} lower
  */
 export const getType = function (val, firstUpper=false) {
-  let str = Object.prototype.toString.apply(val).slice(8, -1).toLowerCase()
-  if (firstUpper) {
-    str = str.charAt(0).toUpperCase() + str.slice(1)
-  }
+  let str = Object.prototype.toString.apply(val).slice(8, -1)
+  if (!firstUpper) str = str.toLowerCase()
   return str
 }
