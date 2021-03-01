@@ -19,6 +19,7 @@ function forInterface(opt) {
   this.props = opt.props || []
   this.base = opt.base || []
   this.name = opt.name
+  this.type = 'Iface'
 }
 /**
  * Interface
@@ -60,10 +61,30 @@ Iface.extends = function () {
   return Iface(tempOpt)
 }
 /**
+ * check inferface
+ * @param {Object} opt {
+ *    iface: [],
+ *    obj: []
+ * }
+//  */
+// Iface.ensureMul = function (opt) {
+//   let {
+//     iface,
+//     obj
+//   } = opt
+//   if (!inter) inter = []
+//   if (!obj) obj = []
+//   for (let i=0; i<obj.length; i++) {
+//     for (let j=0; i<inter.length; j++) {
+//       if (!this.ensure(obj[i], inter[j])) return false
+//     }
+//   }
+//   return true
+// }
+/**
  * check interface
- * @param {*} obj: object
- * @param {*} iface interface
- * @return {boolean}
+ * @param {object} obj 
+ * @param {Iface} iface 
  */
 Iface.ensure = function (obj, iface) {
   let {
@@ -103,7 +124,8 @@ Iface.ensure = function (obj, iface) {
       }
     } else if (item.indexOf('class ') === 0) {
       // class
-      if (!isFunction(obj[item.split(' ')[1]])) {
+      if (!isFunction(obj.constructor[item.split(' ')[1]])) {
+      // if (!isFunction(obj[item.split(' ')[1]])) {
         addLog.add(`interface ${iface.name} expect methods ${item}`)
         return false
       }
@@ -117,7 +139,14 @@ Iface.ensure = function (obj, iface) {
   }
   return true
 }
-
+/**
+ * check is interface
+ * @param {*} obj 
+ * @return {boolean}
+ */
+Iface.isIface = function(obj) {
+  return isIface(obj)
+}
 export {
   Iface
 }

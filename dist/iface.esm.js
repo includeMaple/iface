@@ -61,12 +61,30 @@ const merge = function () {
 };
 
 /**
+ * undefined or null
+ * @param {*} val value
+ * @return {boolean}
+ */
+const isDef = function (val) {
+  return !(val === undefined || val === null)
+};
+
+/**
  * string but not ''
  * @param {*} val 
  * @return {boolean}
  */
 const isDefString = function (val) {
   return typeof(val) === 'string' && val.length > 0
+};
+
+/**
+ * boolean
+ * @param {*} val value
+ * @return {boolean}
+ */
+const isBoolean = function (val) {
+  return typeof(val) === 'boolean'
 };
 /**
  * undefined
@@ -85,6 +103,15 @@ const isFunction = function (val) {
 };
 
 /**
+ * number
+ * @param {*} val value
+ * @return {boolean}
+ */
+const isNumber = function (val) {
+  return typeof(val) === 'number'
+};
+
+/**
  * object
  * @param {*} val value
  * @return {boolean}
@@ -92,12 +119,43 @@ const isFunction = function (val) {
 const isObject = function (val) {
   return Object.prototype.toString.apply(val) === '[object Object]'
 };
+
+/**
+ * array
+ * @param {*} val value
+ */
+const isArray = function (val) {
+  return Array.isArray(val)
+};
+/**
+ * date
+ * @param {*} val value
+ */
+const isDate = function (val) {
+  return Object.prototype.toString.apply(val) === '[object Date]'
+};
+/**
+ * date
+ * @param {*} val value
+ */
+const isJSON = function (val) {
+  try {
+    val = typeof val === 'string' ? JSON.parse(val) : val;
+    if (isArray(val) || isObject(val) && JSON.stringify(val)) return true
+  } catch (error) {
+    return false
+  }
+  return false
+};
 /**
  * iface
  * @param {*} val 
  */
 const isIface = function (val) {
-  return val.constructor === Iface
+  if (!isDef(val)) return false
+  if (!val.type) return false
+  return val.type === 'Iface'
+  // return val.constructor === Iface
 };
 
 /**
@@ -150,10 +208,11 @@ function forInterface(opt) {
   this.props = opt.props || [];
   this.base = opt.base || [];
   this.name = opt.name;
+  this.type = 'Iface';
 }
 /**
  * Interface
- * @param {*} opt 
+ * @param {*} opt methods props name
  */
 function Iface (opt) {
   if (this instanceof Iface) {
@@ -191,10 +250,30 @@ Iface.extends = function () {
   return Iface(tempOpt)
 };
 /**
+ * check inferface
+ * @param {Object} opt {
+ *    iface: [],
+ *    obj: []
+ * }
+//  */
+// Iface.ensureMul = function (opt) {
+//   let {
+//     iface,
+//     obj
+//   } = opt
+//   if (!inter) inter = []
+//   if (!obj) obj = []
+//   for (let i=0; i<obj.length; i++) {
+//     for (let j=0; i<inter.length; j++) {
+//       if (!this.ensure(obj[i], inter[j])) return false
+//     }
+//   }
+//   return true
+// }
+/**
  * check interface
- * @param {*} obj: object
- * @param {*} iface interface
- * @return {boolean}
+ * @param {object} obj 
+ * @param {Iface} iface 
  */
 Iface.ensure = function (obj, iface) {
   let {
@@ -234,7 +313,8 @@ Iface.ensure = function (obj, iface) {
       }
     } else if (item.indexOf('class ') === 0) {
       // class
-      if (!isFunction(obj[item.split(' ')[1]])) {
+      if (!isFunction(obj.constructor[item.split(' ')[1]])) {
+      // if (!isFunction(obj[item.split(' ')[1]])) {
         addLog.add(`interface ${iface.name} expect methods ${item}`);
         return false
       }
@@ -248,11 +328,13 @@ Iface.ensure = function (obj, iface) {
   }
   return true
 };
-
-debugger
-console.log('---');
-var index = {
-  Iface
+/**
+ * check is interface
+ * @param {*} obj 
+ * @return {boolean}
+ */
+Iface.isIface = function(obj) {
+  return isIface(obj)
 };
 
-export default index;
+export { Iface, addLog, dispatch, getType, isArray, isBoolean, isDate, isDef, isDefString, isFunction, isIface, isJSON, isNumber, isObject, isUndefined, merge };

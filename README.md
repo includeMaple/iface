@@ -103,10 +103,11 @@ Javasript与其他语言相比，没有天然的public、private、protected，�
 * 约定使用下划线开头为私有变量/属性
 * 使用闭包（立即执行函数）
 * ES6可以使用Symbol
-但显然这集中私有形式都存在问题
+但显然这几种私有形式都存在问题
 * 使用下划线开头作为私有变量，这只是一种约定，实际变量仍然可以在类外访问、修改
 * 使用闭包，常用的有立即执行函数，虽然闭包确实能达到私有的效果，但一方面闭包影响性能，另一方面不便于阅读，这显然与private表示的方式大相径庭
-* Symbol，我们只是利用了symbol的特性缺实际并不具有可读性，symbol可以作为私有变量也可以作为唯一key的生成方式，如果你在代码里看到这个，只能通过语境上下文判断symbol的用途，另外这个属性也并非真正私有，外部仍然可以访问到
+* Symbol，我们只是利用了symbol的特性，实际并不具有可读性，symbol可以作为私有变量也可以作为唯一key的生成方式，如果你在代码里看到这个，只能通过语境上下文判断symbol的用途，另外这个属性也并非真正私有，外部仍然可以访问到
+
 介于以上几点，Iface也没有使用public、private、protected关键字，我们推荐只关心最后这个类开放出来的接口，而不关心私有变量
 
 # 使用
@@ -118,7 +119,8 @@ let stackInterface = Iface({
   name: 'stackInterface'
 })
 ```
-注意：接口不能使用new关键字
+注意：接口不能使用new关键字，接口只能实现，不能被实例化
+
 
 ## 接口继承
 ```javascript
@@ -157,5 +159,12 @@ let stackInterface = Iface({
   props: ['length', 'top'],
   name: 'stackInterface'
 })
+Iface.isIface(stackInterface)
 if (stackInterface.constructor === Iface) return 'stackInterface is a interface'
 ```
+
+## 接口与抽象类
+如果你用过其他面向对象语言，应该已经看出这里接口的不同之处：没有实际实现，只是做了一次定义（定义后会将接口信息写入all），需要ensure手动检查
+
+
+Iface虽然有构造函数，但不能用new，因为接口与抽象类都不能被实例化，不过抽象类可以达到代码的复用，基于这点，我们可以自己定义一个抽象类做接口工作，暂时忽略代码复用（python没有interface，但有抽象类）

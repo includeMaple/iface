@@ -22,8 +22,6 @@ export const merge = function () {
         Object.assign(temp, arguments[i])
       }
       break;
-    default:
-      break;
   }
   return temp;
 }

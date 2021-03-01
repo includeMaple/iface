@@ -1,4 +1,5 @@
-import Iface from '../src/index'
+import {Iface} from '../src/index'
+// import Iface from '../dist/iface.esm.js'
 console.log(Iface)
 console.log(Iface.constructor)
 class Test{
@@ -12,8 +13,11 @@ Test.b = function () {}
 
 let te = new Test()
 let ifaceTest = Iface({
-  methods: ['pop', 'push', 'isEmpty', 'isFull'],
-  props: ['length', 'top'],
+  methods: ['static cc', 'class b', 'te'],
+  props: ['a'],
   name: 'stackInterface'
 })
-Iface.ensure(ifaceTest, te)
+console.log(Iface.ensure(te, ifaceTest))
+Iface.isIface(te)
+
+

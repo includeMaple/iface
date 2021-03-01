@@ -1,4 +1,3 @@
-import {Iface} from '../core/core'
 /**
  * undefined or null
  * @param {*} val value
@@ -79,18 +78,22 @@ export const isDate = function (val) {
  */
 export const isJSON = function (val) {
   try {
-    JSON.stringify(val)
-    return true
+    val = typeof val === 'string' ? JSON.parse(val) : val
+    if (isArray(val) || isObject(val) && JSON.stringify(val)) return true
   } catch (error) {
     return false
   }
+  return false
 }
 /**
  * iface
  * @param {*} val 
  */
 export const isIface = function (val) {
-  return val.constructor === Iface
+  if (!isDef(val)) return false
+  if (!val.type) return false
+  return val.type === 'Iface'
+  // return val.constructor === Iface
 }
 
 /**

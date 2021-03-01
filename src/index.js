@@ -1,4 +1,7 @@
 import {Iface} from './core/core'
-export default {
+
+export * from './utils/index'
+
+export {
   Iface
 }

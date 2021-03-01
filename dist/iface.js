@@ -4,10 +4,10 @@
  * Released under the MIT License.
  */
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-  typeof define === 'function' && define.amd ? define(factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Iface = factory());
-}(this, (function () { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Iface = {}));
+}(this, (function (exports) { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -208,6 +208,14 @@
   };
 
   /**
+   * undefined or null
+   * @param {*} val value
+   * @return {boolean}
+   */
+  var isDef = function isDef(val) {
+    return !(val === undefined || val === null);
+  };
+  /**
    * string but not ''
    * @param {*} val 
    * @return {boolean}
@@ -215,6 +223,15 @@
 
   var isDefString = function isDefString(val) {
     return typeof val === 'string' && val.length > 0;
+  };
+  /**
+   * boolean
+   * @param {*} val value
+   * @return {boolean}
+   */
+
+  var isBoolean = function isBoolean(val) {
+    return typeof val === 'boolean';
   };
   /**
    * undefined
@@ -234,6 +251,15 @@
     return typeof val === 'function';
   };
   /**
+   * number
+   * @param {*} val value
+   * @return {boolean}
+   */
+
+  var isNumber = function isNumber(val) {
+    return typeof val === 'number';
+  };
+  /**
    * object
    * @param {*} val value
    * @return {boolean}
@@ -243,12 +269,45 @@
     return Object.prototype.toString.apply(val) === '[object Object]';
   };
   /**
+   * array
+   * @param {*} val value
+   */
+
+  var isArray = function isArray(val) {
+    return Array.isArray(val);
+  };
+  /**
+   * date
+   * @param {*} val value
+   */
+
+  var isDate = function isDate(val) {
+    return Object.prototype.toString.apply(val) === '[object Date]';
+  };
+  /**
+   * date
+   * @param {*} val value
+   */
+
+  var isJSON = function isJSON(val) {
+    try {
+      val = typeof val === 'string' ? JSON.parse(val) : val;
+      if (isArray(val) || isObject(val) && JSON.stringify(val)) return true;
+    } catch (error) {
+      return false;
+    }
+
+    return false;
+  };
+  /**
    * iface
    * @param {*} val 
    */
 
   var isIface = function isIface(val) {
-    return val.constructor === Iface;
+    if (!isDef(val)) return false;
+    if (!val.type) return false;
+    return val.type === 'Iface'; // return val.constructor === Iface
   };
   /**
    * return val type
@@ -307,10 +366,11 @@
     this.props = opt.props || [];
     this.base = opt.base || [];
     this.name = opt.name;
+    this.type = 'Iface';
   }
   /**
    * Interface
-   * @param {*} opt 
+   * @param {*} opt methods props name
    */
 
 
@@ -358,10 +418,31 @@
     return Iface(tempOpt);
   };
   /**
+   * check inferface
+   * @param {Object} opt {
+   *    iface: [],
+   *    obj: []
+   * }
+  //  */
+  // Iface.ensureMul = function (opt) {
+  //   let {
+  //     iface,
+  //     obj
+  //   } = opt
+  //   if (!inter) inter = []
+  //   if (!obj) obj = []
+  //   for (let i=0; i<obj.length; i++) {
+  //     for (let j=0; i<inter.length; j++) {
+  //       if (!this.ensure(obj[i], inter[j])) return false
+  //     }
+  //   }
+  //   return true
+  // }
+
+  /**
    * check interface
-   * @param {*} obj: object
-   * @param {*} iface interface
-   * @return {boolean}
+   * @param {object} obj 
+   * @param {Iface} iface 
    */
 
 
@@ -419,7 +500,8 @@
           }
         } else if (_item.indexOf('class ') === 0) {
           // class
-          if (!isFunction(obj[_item.split(' ')[1]])) {
+          if (!isFunction(obj.constructor[_item.split(' ')[1]])) {
+            // if (!isFunction(obj[item.split(' ')[1]])) {
             addLog.add("interface ".concat(iface.name, " expect methods ").concat(_item));
             return false;
           }
@@ -439,13 +521,34 @@
 
     return true;
   };
+  /**
+   * check is interface
+   * @param {*} obj 
+   * @return {boolean}
+   */
 
-  debugger;
-  console.log('---');
-  var index = {
-    Iface: Iface
+
+  Iface.isIface = function (obj) {
+    return isIface(obj);
   };
 
-  return index;
+  exports.Iface = Iface;
+  exports.addLog = addLog;
+  exports.dispatch = dispatch;
+  exports.getType = getType;
+  exports.isArray = isArray;
+  exports.isBoolean = isBoolean;
+  exports.isDate = isDate;
+  exports.isDef = isDef;
+  exports.isDefString = isDefString;
+  exports.isFunction = isFunction;
+  exports.isIface = isIface;
+  exports.isJSON = isJSON;
+  exports.isNumber = isNumber;
+  exports.isObject = isObject;
+  exports.isUndefined = isUndefined;
+  exports.merge = merge;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
