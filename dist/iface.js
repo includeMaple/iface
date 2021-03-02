@@ -351,6 +351,216 @@
     return false;
   }
 
+  /**
+   * wash opt
+   * {
+    methods: [{}],
+    props: [{}],
+    name: ''
+  } to 
+  {
+    methods: [],
+    props: [],
+    name: '',
+    doc: {
+      methods: [{}],
+      props: [{}],
+    }
+  }
+   */
+
+  function washOpt(opt) {
+    var doc = {
+      methods: [],
+      props: []
+    };
+    var temp = ['methods', 'props', 'name'];
+
+    var _loop = function _loop() {
+      var key = _temp[_i];
+
+      if (opt && isArray(opt[key])) {
+        opt[key] = opt[key].map(function (item, index, arr) {
+          if (isObject(item)) {
+            doc[key].push(item);
+          } else {
+            doc[key].push({
+              name: item
+            });
+          }
+
+          return item.name || item;
+        });
+      }
+    };
+
+    for (var _i = 0, _temp = temp; _i < _temp.length; _i++) {
+      _loop();
+    }
+
+    return {
+      opt: opt,
+      doc: doc
+    };
+  }
+
+  var CreateConfig = /*#__PURE__*/function () {
+    function CreateConfig(opt) {
+      _classCallCheck(this, CreateConfig);
+
+      this.opt = {
+        newLine: '\n',
+        lang: 'javascript',
+        type: 'md'
+      };
+      opt && this.setOptions(opt);
+      this.config = this[this.opt.type]();
+    }
+
+    _createClass(CreateConfig, [{
+      key: "setOptions",
+      value: function setOptions(opt) {
+        this.opt = Object.assign({}, this.opt, opt);
+      }
+    }, {
+      key: "md",
+      value: function md() {
+        return [{
+          key: 'lev1',
+          header: '# ',
+          tail: this.opt.newLine
+        }, {
+          key: 'lev2',
+          header: '## ',
+          tail: this.opt.newLine
+        }, {
+          key: 'name',
+          header: '### ',
+          tail: this.opt.newLine
+        }, {
+          key: 'params',
+          header: '`@params ',
+          tail: '`' + this.opt.newLine,
+          isArray: true
+        }, {
+          key: 'return',
+          header: '`@return ',
+          tail: '`' + this.opt.newLine,
+          isArray: true
+        }, {
+          key: 'description',
+          header: '',
+          tail: this.opt.newLine + this.opt.newLine
+        }, {
+          key: 'example',
+          header: '```' + this.opt.lang + this.opt.newLine,
+          tail: this.opt.newLine + '```' + this.opt.newLine
+        }];
+      }
+    }]);
+
+    return CreateConfig;
+  }();
+
+  var config = new CreateConfig().config; // markdown 好后请重构代码
+
+  var Render = /*#__PURE__*/function () {
+    function Render(doc) {
+      _classCallCheck(this, Render);
+
+      this.config = config;
+      this.doc = doc;
+      this.str = '';
+    }
+
+    _createClass(Render, [{
+      key: "setConfig",
+      value: function setConfig(config) {
+        this.config = config;
+      }
+    }, {
+      key: "_toString",
+      value: function _toString(node) {
+        var arr = Object.keys(node);
+        var str = '';
+
+        var _iterator = _createForOfIteratorHelper(this.config),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var con = _step.value;
+
+            if (arr.indexOf(con.key) >= 0) {
+              str = str + con.header + node[con.key] + con.tail;
+            }
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+
+        return str;
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        for (var key in this.doc) {
+          // add name
+          this.str += this.config[0].header + key + this.config[0].tail;
+
+          for (var _i = 0, _arr = ['methods', 'props']; _i < _arr.length; _i++) {
+            var dockey = _arr[_i];
+            // add methods and props
+            this.str += this.config[1].header + dockey + this.config[1].tail;
+
+            if (this.doc && this.doc[key] && this.doc[key][dockey]) {
+              var itemTemp = this.doc[key][dockey];
+
+              var _iterator2 = _createForOfIteratorHelper(itemTemp),
+                  _step2;
+
+              try {
+                for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                  var ii = _step2.value;
+
+                  // item
+                  if (isArray(ii)) {
+                    var _iterator3 = _createForOfIteratorHelper(ii),
+                        _step3;
+
+                    try {
+                      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+                        var iii = _step3.value;
+                        this.str += this._toString(iii);
+                      }
+                    } catch (err) {
+                      _iterator3.e(err);
+                    } finally {
+                      _iterator3.f();
+                    }
+                  } else if (isObject(ii)) {
+                    this.str += this._toString(ii);
+                  } // this.str += this.config[item.key].header + this.doc[key][dockey][item.key] + this.config[item.key].tail
+
+                }
+              } catch (err) {
+                _iterator2.e(err);
+              } finally {
+                _iterator2.f();
+              }
+            }
+          }
+        }
+
+        return this.str;
+      }
+    }]);
+
+    return Render;
+  }();
+
   var INTANCE_WARNING = "Interface cannot be invoked with 'new'. ";
   /**
    * crate interface object
@@ -371,21 +581,35 @@
   /**
    * Interface
    * @param {*} opt methods props name
+  {methods: [string | Object],props: [],name: ''}
+  Object:{
+    name: String,
+    description: String,
+    params: String or Array,[String],
+    return: String,
+    example: String
+  }
    */
 
 
   function Iface(opt) {
+    // check
     if (this instanceof Iface) {
       addLog.add(INTANCE_WARNING, 'error');
     }
 
     if (!isDefString(opt.name)) {
       addLog.add('Interface expect name.', 'error');
-    }
+    } // init
 
-    var inter = new forInterface(opt);
+
+    var temp = washOpt(opt); // new Interface
+
+    var inter = new forInterface(temp.opt);
     if (!isObject(Iface.all)) Iface.all = {};
     Iface.all[inter.name] = inter;
+    if (!isObject(Iface.doc)) Iface.doc = {};
+    Iface.doc[inter.name] = temp.doc;
     inter.constructor = Iface;
     return inter;
   }
@@ -530,6 +754,12 @@
 
   Iface.isIface = function (obj) {
     return isIface(obj);
+  };
+
+  Iface.render = function (doc, config) {
+    var re = new Render(doc);
+    if (config) re.setConfig(config);
+    return re.render();
   };
 
   exports.Iface = Iface;

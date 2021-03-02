@@ -198,6 +198,154 @@ function dispatch(name, that, params=[]) {
   return false
 }
 
+/**
+ * wash opt
+ * {
+  methods: [{}],
+  props: [{}],
+  name: ''
+} to 
+{
+  methods: [],
+  props: [],
+  name: '',
+  doc: {
+    methods: [{}],
+    props: [{}],
+  }
+}
+ */
+function washOpt(opt) {
+  let doc = {
+    methods: [],
+    props: []
+  };
+  let temp = ['methods', 'props', 'name'];
+  for (let key of temp) {
+    if (opt && isArray(opt[key])) {
+      opt[key] = opt[key].map((item, index, arr) => {
+        if (isObject(item)) {
+          doc[key].push(item);
+        } else {
+          doc[key].push({
+            name: item
+          });
+        }
+        return item.name || item
+      });
+    }
+  }
+  return {
+    opt,
+    doc
+  }
+}
+
+class CreateConfig {
+  constructor (opt) {
+    this.opt = {
+      newLine: '\n',
+      lang: 'javascript',
+      type: 'md'
+    };
+    opt && this.setOptions(opt);
+    this.config = this[this.opt.type]();
+  }
+  setOptions (opt) {
+    this.opt = Object.assign({}, this.opt, opt);
+  }
+  md () {
+    return [
+      {
+        key: 'lev1',
+        header: '# ',
+        tail: this.opt.newLine
+      },
+      {
+        key: 'lev2',
+        header: '## ',
+        tail: this.opt.newLine
+      },
+      {
+        key: 'name',
+        header: '### ',
+        tail: this.opt.newLine
+      },
+      {
+        key: 'params',
+        header: '`@params ',
+        tail: '`'+this.opt.newLine,
+        isArray: true
+      },
+      {
+        key: 'return',
+        header: '`@return ',
+        tail: '`'+this.opt.newLine,
+        isArray: true
+      },
+      {
+        key: 'description',
+        header: '',
+        tail: this.opt.newLine + this.opt.newLine
+      },
+      {
+        key: 'example',
+        header: '```' + this.opt.lang + this.opt.newLine,
+        tail: this.opt.newLine + '```' + this.opt.newLine
+      }
+    ]
+  }
+}
+
+let config = (new CreateConfig()).config;
+
+// markdown 好后请重构代码
+class Render {
+  constructor (doc) {
+    this.config = config;
+    this.doc = doc;
+    this.str = '';
+  }
+  setConfig (config) {
+    this.config = config;
+  }
+  _toString (node) {
+    let arr = Object.keys(node);
+    let str = '';
+    for (let con of this.config) {
+      if (arr.indexOf(con.key) >= 0) {
+        str = str + con.header + node[con.key] + con.tail;
+      }
+    }
+    return str
+  }
+  render () {
+    for (let key in this.doc) {
+      // add name
+      this.str += this.config[0].header + key + this.config[0].tail;
+      for (let dockey of ['methods', 'props']) {
+        // add methods and props
+        this.str += this.config[1].header + dockey + this.config[1].tail;
+        if (this.doc && this.doc[key] && this.doc[key][dockey]) {
+          let itemTemp = this.doc[key][dockey];
+          for (let ii of itemTemp) {
+            // item
+            if (isArray(ii)) {
+              for (let iii of ii) {
+                this.str += this._toString(iii);
+              }
+            } else if (isObject(ii)) {
+              this.str += this._toString(ii);
+            }
+            // this.str += this.config[item.key].header + this.doc[key][dockey][item.key] + this.config[item.key].tail
+          }
+        }
+      }
+    }
+    return this.str
+  }
+}
+
 const INTANCE_WARNING = `Interface cannot be invoked with 'new'. `;
 /**
  * crate interface object
@@ -217,20 +365,35 @@ function forInterface(opt) {
 /**
  * Interface
  * @param {*} opt methods props name
+{methods: [string | Object],props: [],name: ''}
+Object:{
+  name: String,
+  description: String,
+  params: String or Array,[String],
+  return: String,
+  example: String
+}
  */
 function Iface (opt) {
+  // check
   if (this instanceof Iface) {
     addLog.add(INTANCE_WARNING, 'error');
   }
   if (!isDefString(opt.name)) {
     addLog.add('Interface expect name.', 'error');
   }
-  let inter = new forInterface(opt);
+  // init
+  let temp = washOpt(opt);
+  // new Interface
+  let inter = new forInterface(temp.opt);
   if (!isObject(Iface.all)) Iface.all = {};
   Iface.all[inter.name] = inter;
+  if (!isObject(Iface.doc)) Iface.doc = {};
+  Iface.doc[inter.name] = temp.doc;
   inter.constructor = Iface;
   return inter
 }
+
 /**
  * extend interface
  */
@@ -339,6 +502,11 @@ Iface.ensure = function (obj, iface) {
  */
 Iface.isIface = function(obj) {
   return isIface(obj)
+};
+Iface.render = function (doc, config) {
+  let re = new Render(doc);
+  if (config) re.setConfig(config);
+  return re.render()
 };
 
 exports.Iface = Iface;
