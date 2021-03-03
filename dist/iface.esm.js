@@ -1,5 +1,5 @@
 /*!
- * iface.js v1.0.0
+ * iface.js v1.0.2
  * (c) 2021-2021 include maple
  * Released under the MIT License.
  */

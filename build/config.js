@@ -11,5 +11,5 @@ export const configs = {
   banner,
   entry: 'src/index.js',
   out: 'dist/iface',
-  name: 'Iface'
+  name: 'iface'
 }

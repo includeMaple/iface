@@ -1,12 +1,12 @@
 /*!
- * iface.js v1.0.0
+ * iface.js v1.0.2
  * (c) 2021-2021 include maple
  * Released under the MIT License.
  */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.Iface = {}));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.iface = {}));
 }(this, (function (exports) { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
