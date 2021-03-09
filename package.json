@@ -1,8 +1,12 @@
 {
   "name": "iface",
-  "version": "1.0.2",
+  "version": "1.0.6",
   "description": "Javascript interface document",
   "main": "src/index.js",
+  "exports": {
+    "require": "./dist/iface.cjs.js",
+    "import": "./dist/iface.esm.js"
+  },
   "scripts": {
     "build": "rollup --config build/dev.js && rollup --config build/pro.js && rollup --config build/cjs.js && rollup --config build/esm.js",
     "test": "mocha",
