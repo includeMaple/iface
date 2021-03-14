@@ -79,3 +79,37 @@ describe('type test', function (){
     expect(Iface.isIface(undefined)).to.be.false
   })
 })
+
+let docStack = Iface({
+  methods: [
+    {
+      name: 'pop',
+      description: '获取栈顶元素',
+      return: '栈顶元素',
+      example: `
+      let stack = new Stack()
+      stack.pop()
+    `},
+    {
+      name: 'push',
+      description: '入栈',
+      params: ['val: 入栈元素'],
+      return: 'boolean',
+      example: `
+      let stack = new Stack()
+      stack.push('data')
+      `
+    }
+  ],
+  props: [{
+    name: 'length',
+    description: '返回栈长度'
+  }],
+  name: 'stackInterface'
+})
+
+describe('Stack interface document test', function (){
+  it('docStack', function (){
+    expect(Iface.ensure(new Stack(), docStack)).to.be.ok
+  })
+})
