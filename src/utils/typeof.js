@@ -16,6 +16,10 @@ export const isDefString = function (val) {
   return typeof(val) === 'string' && val.length > 0
 }
 
+export const isString = function (val) {
+  return typeof(val) === 'string'
+}
+
 /**
  * boolean
  * @param {*} val value
