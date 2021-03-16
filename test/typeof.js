@@ -1,7 +1,7 @@
 let utils= require('../dist/iface.cjs.js')
 let expect = require('chai').expect;
 let {isDef, isDefString, isBoolean, isUndefined, isFunction, isNumber,
-isObject, isArray, isJSON, isDate, getType} = utils
+isObject, isArray, isJSON, isDate, getType, isString, isNull} = utils
 
 describe('type test', function (){
   it('isDef', function (){
@@ -17,6 +17,12 @@ describe('type test', function (){
     expect(isDefString(null)).to.be.false
     expect(isDefString(' ')).to.be.true
   })
+  it('isString', function () {
+    expect(isString('')).to.be.true
+    expect(isString(undefined)).to.be.false
+    expect(isString(null)).to.be.false
+    expect(isString(' ')).to.be.true
+  })
   it('isBoolean', function () {
     expect(isBoolean(true)).to.be.true
     expect(isBoolean(false)).to.be.true
@@ -29,6 +35,13 @@ describe('type test', function (){
     expect(isUndefined(false)).to.be.false
     expect(isUndefined(null)).to.be.false
     expect(isUndefined('')).to.be.false
+  })
+  it('isNull', function () {
+    expect(isNull(null)).to.be.ok
+    expect(isNull(false)).to.be.false 
+    expect(isNull([])).to.be.false
+    expect(isNull('')).to.be.false
+    expect(isNull(undefined)).to.be.false
   })
   it('isFunction', function () {
     expect(isFunction(undefined)).to.be.false

@@ -83,6 +83,15 @@ const isDefString = function (val) {
 };
 
 /**
+ * string
+ * @param {*} val 
+ * @return {boolean}
+ */
+const isString = function (val) {
+  return typeof(val) === 'string'
+};
+
+/**
  * boolean
  * @param {*} val value
  * @return {boolean}
@@ -96,6 +105,14 @@ const isBoolean = function (val) {
  */
 const isUndefined = function (val) {
   return typeof(val) === 'undefined'
+};
+/**
+ * null
+ * @param {*} val 
+ * @return {boolean}
+ */
+const isNull = function (val) {
+  return val === null
 };
 /**
  * function
@@ -521,7 +538,9 @@ exports.isDefString = isDefString;
 exports.isFunction = isFunction;
 exports.isIface = isIface;
 exports.isJSON = isJSON;
+exports.isNull = isNull;
 exports.isNumber = isNumber;
 exports.isObject = isObject;
+exports.isString = isString;
 exports.isUndefined = isUndefined;
 exports.merge = merge;

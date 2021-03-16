@@ -225,6 +225,15 @@
     return typeof val === 'string' && val.length > 0;
   };
   /**
+   * string
+   * @param {*} val 
+   * @return {boolean}
+   */
+
+  var isString = function isString(val) {
+    return typeof val === 'string';
+  };
+  /**
    * boolean
    * @param {*} val value
    * @return {boolean}
@@ -240,6 +249,15 @@
 
   var isUndefined = function isUndefined(val) {
     return typeof val === 'undefined';
+  };
+  /**
+   * null
+   * @param {*} val 
+   * @return {boolean}
+   */
+
+  var isNull = function isNull(val) {
+    return val === null;
   };
   /**
    * function
@@ -774,8 +792,10 @@
   exports.isFunction = isFunction;
   exports.isIface = isIface;
   exports.isJSON = isJSON;
+  exports.isNull = isNull;
   exports.isNumber = isNumber;
   exports.isObject = isObject;
+  exports.isString = isString;
   exports.isUndefined = isUndefined;
   exports.merge = merge;
 

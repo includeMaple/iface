@@ -79,6 +79,15 @@ const isDefString = function (val) {
 };
 
 /**
+ * string
+ * @param {*} val 
+ * @return {boolean}
+ */
+const isString = function (val) {
+  return typeof(val) === 'string'
+};
+
+/**
  * boolean
  * @param {*} val value
  * @return {boolean}
@@ -92,6 +101,14 @@ const isBoolean = function (val) {
  */
 const isUndefined = function (val) {
   return typeof(val) === 'undefined'
+};
+/**
+ * null
+ * @param {*} val 
+ * @return {boolean}
+ */
+const isNull = function (val) {
+  return val === null
 };
 /**
  * function
@@ -505,4 +522,4 @@ Iface.render = function (doc, config) {
   return re.render()
 };
 
-export { Iface, addLog, dispatch, getType, isArray, isBoolean, isDate, isDef, isDefString, isFunction, isIface, isJSON, isNumber, isObject, isUndefined, merge };
+export { Iface, addLog, dispatch, getType, isArray, isBoolean, isDate, isDef, isDefString, isFunction, isIface, isJSON, isNull, isNumber, isObject, isString, isUndefined, merge };

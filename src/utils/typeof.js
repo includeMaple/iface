@@ -16,6 +16,11 @@ export const isDefString = function (val) {
   return typeof(val) === 'string' && val.length > 0
 }
 
+/**
+ * string
+ * @param {*} val 
+ * @return {boolean}
+ */
 export const isString = function (val) {
   return typeof(val) === 'string'
 }
@@ -34,6 +39,14 @@ export const isBoolean = function (val) {
  */
 export const isUndefined = function (val) {
   return typeof(val) === 'undefined'
+}
+/**
+ * null
+ * @param {*} val 
+ * @return {boolean}
+ */
+export const isNull = function (val) {
+  return val === null
 }
 /**
  * function
